@@ -91,7 +91,7 @@ body <- dashboardBody(
                                 box(width = 12, title = "PCA Parameters",
                                     checkboxInput("center", tags$b("Center Data"), value = TRUE),
                                     checkboxInput("scale", tags$b("Scale Data"), value = FALSE),
-                                    #checkboxInput("filter", tags$b("Savitzky-Golay Filter"), value = FALSE),
+                                    checkboxInput("filter", tags$b("Savitzky-Golay Filter"), value = FALSE),
                                     conditionalPanel(
                                       condition = "input.filter == '1'",
                                       sliderInput("sgolay", "Derivative Order", min = 0, max = 2, value = 0),
