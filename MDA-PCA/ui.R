@@ -25,6 +25,13 @@ body <- dashboardBody(
                        fluidRow(
                          column(3,
                                 box(width = 12, title = "Upload Reference Data",
+                                    # Input: File type ----
+                                    radioButtons("filetype1", "File type",
+                                                 choices = c(LabSpec = "labspec",
+                                                             Tellspec = "tellspec"
+                                                 ),
+                                                 selected = "labspec"),
+                                    
                                     # Input: Select a file ----
                                     fileInput("file1", "Choose File",
                                               multiple = FALSE,
@@ -32,15 +39,24 @@ body <- dashboardBody(
                                                          "text/comma-separated-values,text/plain",
                                                          ".csv")),
                                     
-                                    # Horizontal line ----
-                                    tags$hr(),
+                                    # Add background file ----
+                                    conditionalPanel(
+                                      condition = "input.filetype1 == 'tellspec'",
+                                      checkboxInput("bg", tags$b("Background Correct")),
+                                      conditionalPanel(
+                                        condition = "input.bg == '1'",
+                                        fileInput("background", "Background File",
+                                                  multiple = FALSE,
+                                                  accept = c("text/csv",
+                                                             "text/comma-separated-values,text/plain",
+                                                             ".csv"))
+                                      ),
+                                      checkboxInput("logtrans", tags$b("Log Transform"))  
+                                    ),
                                     
-                                    # Input: File type ----
-                                    radioButtons("filetype1", "File type",
-                                                 choices = c(LabSpec = "labspec",
-                                                             Tellspec = "tellspec"
-                                                 ),
-                                                 selected = "labspec")
+                                    # Horizontal line ----
+                                    tags$hr()
+                                    
                                     
                                     # # Input: Checkbox if file has header ----
                                     # checkboxInput("header", "Header", TRUE),
@@ -91,13 +107,13 @@ body <- dashboardBody(
                                 box(width = 12, title = "PCA Parameters",
                                     checkboxInput("center", tags$b("Center Data"), value = TRUE),
                                     checkboxInput("scale", tags$b("Scale Data"), value = FALSE),
-                                    checkboxInput("filter", tags$b("Savitzky-Golay Filter"), value = FALSE),
-                                    conditionalPanel(
-                                      condition = "input.filter == '1'",
-                                      sliderInput("sgolay", "Derivative Order", min = 0, max = 2, value = 0),
-                                      numericInput("porder", "Polynomial Order", value = 1),
-                                      numericInput("window", tags$b("Window"), value = 15)
-                                    ),
+                                    # checkboxInput("filter", tags$b("Savitzky-Golay Filter"), value = FALSE),
+                                    # conditionalPanel(
+                                    #   condition = "input.filter == '1'",
+                                    #   sliderInput("sgolay", "Derivative Order", min = 0, max = 2, value = 0),
+                                    #   numericInput("porder", "Polynomial Order", value = 1),
+                                    #   numericInput("window", tags$b("Window"), value = 15)
+                                    # ),
                                     checkboxInput("residuals", tags$b("Use Residuals"), value = TRUE),
                                     numericInput("components", tags$b("Principal Components"), value = 10)
                                 )#end box
@@ -129,6 +145,10 @@ body <- dashboardBody(
               tabPanel("M-Distance",
                        fluidRow(
                          column(3,
+                                box(width = 12, title = "M-Dist Parameters",
+                                    numericInput("mdistCI", tags$b("Confidence Interval"), value = 0.95, max = 0.99, step = .01)
+                                )#end box
+                                ,
                                 box(width = 12, title = "Download Analysis",
                                     downloadButton("data1Download", "Download")
                                 )#end box
@@ -168,20 +188,20 @@ body <- dashboardBody(
                        fluidRow(
                          column(3,
                                 box(width = 12, title = "Upload Sample Data",
-                                    # Input: Select a file ----
-                                    fileInput("file2", "Choose CSV File",
-                                              multiple = FALSE,
-                                              accept = c("text/csv",
-                                                         "text/comma-separated-values,text/plain",
-                                                         ".csv"))
-                                    ,
                                     
                                     # Input: File type ----
                                     radioButtons("filetype2", "File type",
                                                  choices = c(LabSpec = "labspec",
                                                              Tellspec = "tellspec"
                                                  ),
-                                                 selected = "labspec")
+                                                 selected = "labspec"),
+                                    
+                                    # Input: Select a file ----
+                                    fileInput("file2", "Choose CSV File",
+                                              multiple = FALSE,
+                                              accept = c("text/csv",
+                                                         "text/comma-separated-values,text/plain",
+                                                         ".csv"))
                                     
                                     # # Horizontal line ----
                                     # tags$hr(),

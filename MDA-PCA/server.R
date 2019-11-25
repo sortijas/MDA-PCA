@@ -47,6 +47,23 @@ server <- function(input, output, session) {
       
       row.names(df) <- names
       
+      if(input$bg == TRUE) {
+        df2 <- read.csv(input$background$datapath)
+        
+        df2 <- df2[,-c(1:6)]
+        
+        even <- seq_len(nrow(df2)) %% 2
+        
+        df2 <- data.frame(x=df2[!even,])
+        
+        df <- df/rowMeans(df2)
+      }
+      
+      if(input$logtrans == TRUE) {
+        
+        df <- log(1/df)
+      }
+      
       df
     }
     
@@ -95,10 +112,10 @@ server <- function(input, output, session) {
     #scale data
     A <- prep.autoscale(A, center = as.logical(ctr), scale =  as.logical(scl))
     
-    #savitzky-golay filtering
-    if(input$filter == TRUE) {
-      A <- prep.savgol(A, width = as.numeric(input$window), porder = as.numeric(input$porder), dorder = as.numeric(input$sgolay))
-    }
+    # #savitzky-golay filtering
+    # if(input$filter == TRUE) {
+    #   A <- prep.savgol(A, width = as.numeric(input$window), porder = as.numeric(input$porder), dorder = as.numeric(input$sgolay))
+    # }
     
     #PCA
     #(pca <- pca(A, ncomp = input$components))
@@ -159,7 +176,23 @@ server <- function(input, output, session) {
     
     output <- as.data.frame(cbind("M-Dist" = mdist2, "Residual" = R))
     
-    return(list(output,A, pca, df, Rc, M_1, RMSG, PCs))
+    #M-distance cutoff calculation
+    n <- dim(A)[1]
+    k <- input$components
+    
+    f_crit <- qf(input$mdistCI, df1=k, df2=(n-k))
+    Dm <- k*(n-1)
+    Dma <- f_crit*Dm
+    Dmax <- Dma/(n-k)
+    DM <- sqrt(Dmax)
+    
+    cutoffDiff <- mdist2-DM
+    PF <- ifelse(mdist2<DM, "Pass", "Fail")
+    
+    output <- as.data.frame(cbind("M-Dist" = mdist2, "Residual" = R, "Factors" = k, "Cutoff" = DM, "Difference" = cutoffDiff, "Outcome" = PF))
+    
+    #Objects returned
+    return(list(output,A, pca, df, Rc, M_1, RMSG, PCs, DM, k))
     
   }) #end getMdist reactive
   
@@ -251,6 +284,23 @@ server <- function(input, output, session) {
           names <- names[!even]
           
           row.names(df) <- names
+          
+          if(input$bg == TRUE) {
+            df2 <- read.csv(input$background$datapath)
+            
+            df2 <- df2[,-c(1:6)]
+            
+            even <- seq_len(nrow(df2)) %% 2
+            
+            df2 <- data.frame(x=df2[!even,])
+            
+            df <- df/colMeans(df2)
+          }
+          
+          if(input$logtrans == TRUE) {
+            
+            df <- log(1/df)
+          }
           
           df
         }
@@ -480,11 +530,19 @@ server <- function(input, output, session) {
     
     #output <- cbind("Lot #" = df[,1],"M-Dist" = mdist$md, "Residual" = R)
     
-    lots<-rbind(df[,1],newdata[,1])
+    #lots<-rbind(df[,1],newdata[,1])
     
     #output <- as.data.frame(cbind("Lot #" = as.character(lots),"M-Dist" = mdist2, "Residual" = R2))
     #output <- as.data.frame(cbind("Lot #" = as.character(newdata[,1]),"M-Dist" = mdist2, "Residual" = E2))
-    output <- as.data.frame(cbind("M-Dist" = mdist2, "Residual" = E2))
+    
+    DM <- getMdist()[[9]]
+    
+    k <- getMdist()[[10]]
+    
+    cutoffDiff <- mdist2-DM
+    PF <- ifelse(mdist2<DM, "Pass", "Fail")
+    
+    output <- as.data.frame(cbind("M-Dist" = mdist2, "Residual" = E2, "Factors" = k, "Cutoff" = DM, "Difference" = cutoffDiff, "Outcome" = PF))
     
     return(list(output,A, pca))
     
