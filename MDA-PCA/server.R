@@ -35,7 +35,13 @@ server <- function(input, output, session) {
       
       names <- basename(as.vector(df[,1],"character"))
       
-      df <- df[,-c(1:6)]
+      colspace <- c()
+      
+      for(i in 1:length(df[1,])) colspace[i] <- ifelse((is.factor(df[1,i])|is.na(df[1,i])),1,0)
+      
+      colnums <- sum(colspace)
+      
+      df <- df[,-c(1:colnums)]
       
       even <- seq_len(nrow(df)) %% 2
       
@@ -50,13 +56,23 @@ server <- function(input, output, session) {
       if(input$bg == TRUE) {
         df2 <- read.csv(input$background$datapath)
         
-        df2 <- df2[,-c(1:6)]
+        colspace2 <- c()
+        
+        for(i in 1:length(df[1,])) colspace2[i] <- ifelse((is.factor(df2[1,i])|is.na(df2[1,i])),1,0)
+        
+        colnums2 <- sum(colspace2)
+        
+        df2 <- df2[,-c(1:colnums2)]        
         
         even <- seq_len(nrow(df2)) %% 2
         
         df2 <- data.frame(x=df2[!even,])
         
-        df <- df/rowMeans(df2)
+        bgmeans <- colMeans(df2)
+        
+        for(i in 1:length(bgmeans)) df[,i] <- df[,i]/bgmeans[i]
+        
+        df
       }
       
       if(input$logtrans == TRUE) {
@@ -273,7 +289,13 @@ server <- function(input, output, session) {
           
           names <- basename(as.vector(df[,1],"character"))
           
-          df <- df[,-c(1:6)]
+          colspace <- c()
+          
+          for(i in 1:length(df[1,])) colspace[i] <- ifelse((is.factor(df[1,i])|is.na(df[1,i])),1,0)
+          
+          colnums <- sum(colspace)
+          
+          df <- df[,-c(1:colnums)]
           
           even <- seq_len(nrow(df)) %% 2
           
@@ -288,13 +310,23 @@ server <- function(input, output, session) {
           if(input$bg == TRUE) {
             df2 <- read.csv(input$background$datapath)
             
-            df2 <- df2[,-c(1:6)]
+            colspace2 <- c()
+            
+            for(i in 1:length(df[1,])) colspace2[i] <- ifelse((is.factor(df2[1,i])|is.na(df2[1,i])),1,0)
+            
+            colnums2 <- sum(colspace2)
+            
+            df2 <- df2[,-c(1:colnums2)]        
             
             even <- seq_len(nrow(df2)) %% 2
             
             df2 <- data.frame(x=df2[!even,])
             
-            df <- df/colMeans(df2)
+            bgmeans <- colMeans(df2)
+            
+            for(i in 1:length(bgmeans)) df[,i] <- df[,i]/bgmeans[i]
+            
+            df
           }
           
           if(input$logtrans == TRUE) {
@@ -348,11 +380,18 @@ server <- function(input, output, session) {
       df
       
     } else {
+      
       df <- read.csv(input$file2$datapath)
       
       names <- basename(as.vector(df[,1],"character"))
       
-      df <- df[,-c(1:6)]
+      colspace <- c()
+      
+      for(i in 1:length(df[1,])) colspace[i] <- ifelse((is.factor(df[1,i])|is.na(df[1,i])),1,0)
+      
+      colnums <- sum(colspace)
+      
+      df <- df[,-c(1:colnums)]
       
       even <- seq_len(nrow(df)) %% 2
       
@@ -363,6 +402,33 @@ server <- function(input, output, session) {
       names <- names[!even]
       
       row.names(df) <- names
+      
+      if(input$bg == TRUE) {
+        df2 <- read.csv(input$background$datapath)
+        
+        colspace2 <- c()
+        
+        for(i in 1:length(df[1,])) colspace2[i] <- ifelse((is.factor(df2[1,i])|is.na(df2[1,i])),1,0)
+        
+        colnums2 <- sum(colspace2)
+        
+        df2 <- df2[,-c(1:colnums2)]        
+        
+        even <- seq_len(nrow(df2)) %% 2
+        
+        df2 <- data.frame(x=df2[!even,])
+        
+        bgmeans <- colMeans(df2)
+        
+        for(i in 1:length(bgmeans)) df[,i] <- df[,i]/bgmeans[i]
+        
+        df
+      }
+      
+      if(input$logtrans == TRUE) {
+        
+        df <- log(1/df)
+      }
       
       df
     }
@@ -431,7 +497,13 @@ server <- function(input, output, session) {
           
           names <- basename(as.vector(df[,1],"character"))
           
-          df <- df[,-c(1:6)]
+          colspace <- c()
+          
+          for(i in 1:length(df[1,])) colspace[i] <- ifelse((is.factor(df[1,i])|is.na(df[1,i])),1,0)
+          
+          colnums <- sum(colspace)
+          
+          df <- df[,-c(1:colnums)]
           
           even <- seq_len(nrow(df)) %% 2
           
@@ -443,9 +515,35 @@ server <- function(input, output, session) {
           
           row.names(df) <- names
           
+          if(input$bg == TRUE) {
+            df2 <- read.csv(input$background$datapath)
+            
+            colspace2 <- c()
+            
+            for(i in 1:length(df[1,])) colspace2[i] <- ifelse((is.factor(df2[1,i])|is.na(df2[1,i])),1,0)
+            
+            colnums2 <- sum(colspace2)
+            
+            df2 <- df2[,-c(1:colnums2)]        
+            
+            even <- seq_len(nrow(df2)) %% 2
+            
+            df2 <- data.frame(x=df2[!even,])
+            
+            bgmeans <- colMeans(df2)
+            
+            for(i in 1:length(bgmeans)) df[,i] <- df[,i]/bgmeans[i]
+            
+            df
+          }
+          
+          if(input$logtrans == TRUE) {
+            
+            df <- log(1/df)
+          }
+          
           df
         }
-        
         
       },
       error = function(e) {
