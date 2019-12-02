@@ -92,8 +92,11 @@ body <- dashboardBody(
                                            ".shiny-output-error { visibility: hidden; }",
                                            ".shiny-output-error:before { visibility: hidden; }"
                                 ),
-                                plotOutput("spectra"),
-                                br(),
+                                box(width=14,
+                                    plotOutput("spectra"),
+                                    downloadButton("downloadPlot", "Plot"),
+                                    downloadButton("downloadData", "Data")
+                                ),
                                 DTOutput("contents")
                                 
                          ) #end column 2
@@ -239,8 +242,11 @@ body <- dashboardBody(
                                            ".shiny-output-error { visibility: hidden; }",
                                            ".shiny-output-error:before { visibility: hidden; }"
                                 ),
-                                plotOutput("spectra2"),
-                                br(),
+                                box(width=14,
+                                    plotOutput("spectra2"),
+                                    downloadButton("downloadPlot2", "Plot"),
+                                    downloadButton("downloadData2", "Data")
+                                ),
                                 DTOutput("contents2")
                                 
                          ) #end column 2

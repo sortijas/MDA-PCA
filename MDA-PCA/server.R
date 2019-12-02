@@ -213,7 +213,9 @@ server <- function(input, output, session) {
   }) #end getMdist reactive
   
   #spectra output
-  output$spectra <- renderPlot({
+  output$spectra <- renderPlot(spectraPlot())
+  
+  spectraPlot <- function()({
     
     df <- getData()
     
@@ -360,6 +362,28 @@ server <- function(input, output, session) {
     }
   ) #end data download handler
   
+  #data download handler (spectral data)
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste0("ref_spectral_data.csv")
+    },
+    content = function(file) {
+      write.csv(getData(), file, row.names = TRUE)
+    }
+  ) #end data download handler
+  
+  #plot download handler
+  output$downloadPlot <- downloadHandler(
+    filename = function() {
+      paste0("ref_spectral_plot.png")
+    },
+    content = function(file) {
+      png(file, width=1000)
+      spectraPlot()
+      dev.off()
+    }
+  ) #end plot download handler
+  
   #_________________________________________________________________________________________________________________________________
   
   getData2 <- reactive({
@@ -437,7 +461,10 @@ server <- function(input, output, session) {
   })
   
   #spectra output
-  output$spectra2 <- renderPlot({
+  
+  output$spectra2 <- renderPlot(spectraPlot2())
+  
+  spectraPlot2 <- function()({
     
     df <- getData2()
     
@@ -658,5 +685,27 @@ server <- function(input, output, session) {
       write.csv(getMdist2()[[1]], file, row.names = TRUE)
     }
   ) #end data download handler
+  
+  #data download handler (spectral data)
+  output$downloadData2 <- downloadHandler(
+    filename = function() {
+      paste0("sample_spectral_data.csv")
+    },
+    content = function(file) {
+      write.csv(getData2(), file, row.names = TRUE)
+    }
+  ) #end data download handler
+  
+  #plot download handler
+  output$downloadPlot2 <- downloadHandler(
+    filename = function() {
+      paste0("sample_spectral_plot.png")
+    },
+    content = function(file) {
+      png(file, width=1000)
+      spectraPlot2()
+      dev.off()
+    }
+  ) #end plot download handler
   
 }
