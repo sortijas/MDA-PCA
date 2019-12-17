@@ -434,7 +434,7 @@ server <- function(input, output, session) {
       row.names(df) <- names
       
       if(input$bg == TRUE) {
-        df2 <- read.csv(input$background$datapath)
+        df2 <- read.csv(input$background2$datapath)
         
         colspace2 <- c()
         
@@ -455,7 +455,7 @@ server <- function(input, output, session) {
         df
       }
       
-      if(input$logtrans == TRUE) {
+      if(input$logtrans2 == TRUE) {
         
         df <- log(1/df)
       }
@@ -550,8 +550,8 @@ server <- function(input, output, session) {
           
           row.names(df) <- names
           
-          if(input$bg == TRUE) {
-            df2 <- read.csv(input$background$datapath)
+          if(input$bg2 == TRUE) {
+            df2 <- read.csv(input$background2$datapath)
             
             colspace2 <- c()
             
@@ -572,7 +572,7 @@ server <- function(input, output, session) {
             df
           }
           
-          if(input$logtrans == TRUE) {
+          if(input$logtrans2 == TRUE) {
             
             df <- log(1/df)
           }

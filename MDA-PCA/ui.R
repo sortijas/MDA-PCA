@@ -204,7 +204,17 @@ body <- dashboardBody(
                                               multiple = FALSE,
                                               accept = c("text/csv",
                                                          "text/comma-separated-values,text/plain",
-                                                         ".csv"))
+                                                         ".csv")),
+                                    checkboxInput("bg2", tags$b("Background Correct")),
+                                    conditionalPanel(
+                                      condition = "input.bg == '1'",
+                                      fileInput("background2", "Background File",
+                                                multiple = FALSE,
+                                                accept = c("text/csv",
+                                                           "text/comma-separated-values,text/plain",
+                                                           ".csv"))
+                                    ),
+                                    checkboxInput("logtrans2", tags$b("Log Transform"))  
                                     
                                     # # Horizontal line ----
                                     # tags$hr(),
