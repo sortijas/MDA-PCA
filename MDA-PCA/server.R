@@ -31,11 +31,14 @@ server <- function(input, output, session) {
       df
       
     } else {
-      df <- read.csv(input$file1$datapath)
+      #df <- read.csv(input$file1$datapath)
+      df <- read_csv(input$file1$datapath, skip=2, col_names=FALSE)
       
       #names <- basename(as.vector(df[,1],"character"))
       
-      names <- basename(paste(as.vector(df[,1],"character"),as.vector(df[,2],"character"),as.vector(df[,3],"character")))
+      #names <- basename(paste(as.vector(df[,1],"character"),as.vector(df[,2],"character"),as.vector(df[,3],"character")))
+      
+      names <- basename(paste(as.matrix(df[,1]),as.matrix(df[,2]),as.matrix(df[,3])))
       
       colspace <- c()
       
@@ -289,11 +292,14 @@ server <- function(input, output, session) {
           df
           
         } else {
-          df <- read.csv(input$file1$datapath)
+          #df <- read.csv(input$file1$datapath)
+          df <- read_csv(input$file1$datapath, skip=2, col_names=FALSE)
           
           #names <- basename(as.vector(df[,1],"character"))
           
-          names <- basename(paste(as.vector(df[,1],"character"),as.vector(df[,2],"character"),as.vector(df[,3],"character")))
+          #names <- basename(paste(as.vector(df[,1],"character"),as.vector(df[,2],"character"),as.vector(df[,3],"character")))
+          
+          names <- basename(paste(as.matrix(df[,1]),as.matrix(df[,2]),as.matrix(df[,3])))
           
           colspace <- c()
           
@@ -409,11 +415,14 @@ server <- function(input, output, session) {
       
     } else {
       
-      df <- read.csv(input$file2$datapath)
+      #df <- read.csv(input$file2$datapath)
+      df <- read_csv(input$file2$datapath, skip=2, col_names=FALSE)
       
       #names <- basename(as.vector(df[,1],"character"))
       
-      names <- basename(paste(as.vector(df[,1],"character"),as.vector(df[,2],"character"),as.vector(df[,3],"character")))
+      #names <- basename(paste(as.vector(df[,1],"character"),as.vector(df[,2],"character"),as.vector(df[,3],"character")))
+      
+      names <- basename(paste(as.matrix(df[,1]),as.matrix(df[,2]),as.matrix(df[,3])))
       
       colspace <- c()
       
@@ -526,11 +535,14 @@ server <- function(input, output, session) {
           df
           
         } else {
-          df <- read.csv(input$file2$datapath)
+          #df <- read.csv(input$file2$datapath)
+          df <- read_csv(input$file2$datapath, skip=2, col_names=FALSE)
           
           #names <- basename(as.vector(df[,1],"character"))
           
-          names <- basename(paste(as.vector(df[,1],"character"),as.vector(df[,2],"character"),as.vector(df[,3],"character")))
+          #names <- basename(paste(as.vector(df[,1],"character"),as.vector(df[,2],"character"),as.vector(df[,3],"character")))
+          
+          names <- basename(paste(as.matrix(df[,1]),as.matrix(df[,2]),as.matrix(df[,3])))
           
           colspace <- c()
           
