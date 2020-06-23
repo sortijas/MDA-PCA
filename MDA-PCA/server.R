@@ -32,12 +32,8 @@ server <- function(input, output, session) {
       
     } else {
       #df <- read.csv(input$file1$datapath)
-<<<<<<< HEAD
       df <- read_csv(input$file1$datapath, skip=2, col_names=FALSE)
-=======
-      df <- read_csv(input$file1$datapath)
->>>>>>> 1013a66fed54d5077ca02c3deef0351cfc1662b3
-      
+
       #names <- basename(as.vector(df[,1],"character"))
       
       #names <- basename(paste(as.vector(df[,1],"character"),as.vector(df[,2],"character"),as.vector(df[,3],"character")))
@@ -420,12 +416,8 @@ server <- function(input, output, session) {
     } else {
       
       #df <- read.csv(input$file2$datapath)
-<<<<<<< HEAD
       df <- read_csv(input$file2$datapath, skip=2, col_names=FALSE)
-=======
-      df <- read_csv(input$file2$datapath)
->>>>>>> 1013a66fed54d5077ca02c3deef0351cfc1662b3
-      
+
       #names <- basename(as.vector(df[,1],"character"))
       
       #names <- basename(paste(as.vector(df[,1],"character"),as.vector(df[,2],"character"),as.vector(df[,3],"character")))
