@@ -32,7 +32,14 @@ server <- function(input, output, session) {
       
     } else {
       #df <- read.csv(input$file1$datapath)
-      df <- read_csv(input$file1$datapath, skip=2, col_names=FALSE)
+      #df <- read_csv(input$file1$datapath, skip=2, col_names=FALSE)
+      df <- read.csv(input$file1$datapath, header=FALSE)
+      
+      if('sep=' %in% df[1,1]) {
+        df <- df[-c(1:2),]
+      } else {
+        df <- df[-1,] 
+      }
 
       #names <- basename(as.vector(df[,1],"character"))
       
@@ -293,7 +300,14 @@ server <- function(input, output, session) {
           
         } else {
           #df <- read.csv(input$file1$datapath)
-          df <- read_csv(input$file1$datapath, skip=2, col_names=FALSE)
+          #df <- read_csv(input$file1$datapath, skip=2, col_names=FALSE)
+          df <- read.csv(input$file1$datapath, header=FALSE)
+          
+          if('sep=' %in% df[1,1]) {
+            df <- df[-c(1:2),]
+          } else {
+            df <- df[-1,] 
+          }
           
           #names <- basename(as.vector(df[,1],"character"))
           
@@ -416,7 +430,14 @@ server <- function(input, output, session) {
     } else {
       
       #df <- read.csv(input$file2$datapath)
-      df <- read_csv(input$file2$datapath, skip=2, col_names=FALSE)
+      #df <- read_csv(input$file2$datapath, skip=2, col_names=FALSE)
+      df <- read.csv(input$file2$datapath, header=FALSE)
+      
+      if('sep=' %in% df[1,1]) {
+        df <- df[-c(1:2),]
+      } else {
+        df <- df[-1,] 
+      }
 
       #names <- basename(as.vector(df[,1],"character"))
       
@@ -536,7 +557,14 @@ server <- function(input, output, session) {
           
         } else {
           #df <- read.csv(input$file2$datapath)
-          df <- read_csv(input$file2$datapath, skip=2, col_names=FALSE)
+          #df <- read_csv(input$file2$datapath, skip=2, col_names=FALSE)
+          df <- read.csv(input$file2$datapath, header=FALSE)
+          
+          if('sep=' %in% df[1,1]) {
+            df <- df[-c(1:2),]
+          } else {
+            df <- df[-1,] 
+          }
           
           #names <- basename(as.vector(df[,1],"character"))
           
