@@ -20,6 +20,9 @@ server <- function(input, output, session) {
                                      sep = "\t",
                                      skip = 33, row.names = 1, stringsAsFactors = FALSE)))
       
+      #complete cases
+      df <- df[complete.cases(df),]
+      
       row.names(df)<-basename(as.vector(df[,1],"character"))
       
       df<-df[,-1]
@@ -288,6 +291,9 @@ server <- function(input, output, session) {
                                          sep = "\t",
                                          skip = 33, row.names = 1, stringsAsFactors = FALSE)))
           
+          #complete cases
+          df <- df[complete.cases(df),]
+          
           row.names(df)<-basename(as.vector(df[,1],"character"))
           
           df<-df[,-1]
@@ -417,6 +423,9 @@ server <- function(input, output, session) {
                                      sep = "\t",
                                      skip = 33, row.names = 1, stringsAsFactors = FALSE)))
       
+      #complete cases
+      df <- df[complete.cases(df),]
+      
       row.names(df)<-basename(as.vector(df[,1],"character"))
       
       df<-df[,-1]
@@ -544,6 +553,9 @@ server <- function(input, output, session) {
                                          header = FALSE,
                                          sep = "\t",
                                          skip = 33, row.names = 1, stringsAsFactors = FALSE)))
+          
+          #complete cases
+          df <- df[complete.cases(df),]
           
           row.names(df)<-basename(as.vector(df[,1],"character"))
           
