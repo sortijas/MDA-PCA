@@ -8,6 +8,9 @@ library(factoextra)
 
 server <- function(input, output, session) {
   
+  #increase file size uploads
+  options(shiny.maxRequestSize=30*1024^2)
+  
   #stop app when closing
   session$onSessionEnded(function() {
     stopApp()
