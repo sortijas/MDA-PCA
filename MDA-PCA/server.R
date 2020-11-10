@@ -243,7 +243,7 @@ server <- function(input, output, session) {
   getSampleData <- reactive({
     df <- getData(input$file2$datapath, input$file2$name, input$filetype2)[[1]]
     
-    if(input$bg == TRUE) {
+    if(input$bg2 == TRUE) {
       df2 <- getData(input$background2$datapath, input$background2$name, input$filetype2)[[1]]
       
       bgmeans <- colMeans(df2)

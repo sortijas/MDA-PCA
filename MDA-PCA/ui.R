@@ -158,7 +158,7 @@ body <- dashboardBody(
                                                          ".csv")),
                                     checkboxInput("bg2", tags$b("Background Correct")),
                                     conditionalPanel(
-                                      condition = "input.bg == '1'",
+                                      condition = "input.bg2 == '1'",
                                       fileInput("background2", "Background File",
                                                 multiple = FALSE,
                                                 accept = c("text/csv",
