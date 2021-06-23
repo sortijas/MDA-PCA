@@ -3,6 +3,9 @@ library(DT)
 library(mdatools)
 library(data.table)
 
+#to modify app
+#library(rsconnect)
+#deployApp()
 
 #sidebar design
 sidebar <- dashboardSidebar(
@@ -117,7 +120,10 @@ body <- dashboardBody(
                                 box(width = 12, title = "Download Analysis",
                                     downloadButton("data1Download", "Download")
                                 )#end box
-                                
+                                # ,
+                                # box(width = 12, title = "Metadata",
+                                #     verbatimTextOutput("metadata")
+                                # )#end box
                          ), #end column 1
                          
                          column(6,

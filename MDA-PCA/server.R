@@ -158,12 +158,18 @@ server <- function(input, output, session) {
     
     cutoffDiff <- mdist2-DM
     PF <- ifelse(mdist2<DM, "Pass", "Fail")
+    mean_mdist <- mean(mdist2)
     
-    output <- as.data.frame(cbind("M-Dist" = mdist2, "Residual" = R, "Factors" = k, "Cutoff" = DM, 
+    output <- as.data.frame(cbind("Sample"=row.names(output), "M-Dist" = mdist2, "Residual" = R, "Factors" = k, "Cutoff" = DM, 
                                   "Difference" = cutoffDiff, "Outcome" = PF))
     
+    #identifiers <- getIdentifiers(input$file1$datapath,input$file1$name)[,1:2]
+    identifiers <- getIdentifiers(input$file1$datapath,input$file1$name)
+    
+    output <- left_join(output,identifiers, by="Sample")
+    
     #Objects returned
-    return(list(output,A, pca, df, Rc, M_1, RMSG, PCs, DM, k))
+    return(list(output,A, pca, df, Rc, M_1, RMSG, PCs, DM, k, mean_mdist))
     
   }) #end getMdist reactive
   
@@ -198,7 +204,11 @@ server <- function(input, output, session) {
   output$data1Download <- downloadHandler(
     filename = "Reference.csv",
     content = function(file) {
-      write.csv(getMdist()[[1]], file, row.names = TRUE)
+      mean_mdist <- getMdist()[[11]]
+      date_reported <- as.character(Sys.Date())
+      head <- rbind("Date Reported"=date_reported,"Mean M-Distance"=mean_mdist,"")
+      write.table(head, file,sep=",",quote=FALSE,row.names = TRUE,col.names = FALSE)
+      write.table(getMdist()[[1]],file,append=TRUE,sep=",", row.names = FALSE)
     }
   ) #end data download handler
   
@@ -342,9 +352,19 @@ server <- function(input, output, session) {
     cutoffDiff <- mdist2-DM
     PF <- ifelse(mdist2<DM, "Pass", "Fail")
     
-    output <- as.data.frame(cbind("M-Dist" = mdist2, "Residual" = E2, "Factors" = k, "Cutoff" = DM, "Difference" = cutoffDiff, "Outcome" = PF))
+    mean_mdist <- mean(mdist2)
     
-    return(list(output,A, pca))
+    output <- as.data.frame(cbind("Sample"=row.names(A3), "M-Dist" = mdist2, "Residual" = E2, "Factors" = k, "Cutoff" = DM, 
+                                  "Difference" = cutoffDiff, "Outcome" = PF))
+    
+    #output <- as.data.frame(cbind("M-Dist" = mdist2, "Residual" = E2, "Factors" = k, "Cutoff" = DM, "Difference" = cutoffDiff, "Outcome" = PF))
+    
+    #identifiers <- getIdentifiers(input$file2$datapath,input$file2$name)[,1:2]
+    identifiers <- getIdentifiers(input$file2$datapath,input$file2$name)
+    
+    output <- left_join(output,identifiers, by="Sample")
+    
+    return(list(output,A, pca, mean_mdist))
     
   }) #end getMdist2 reactive
   
@@ -357,8 +377,15 @@ server <- function(input, output, session) {
   output$data2Download <- downloadHandler(
     filename = "Sample.csv",
     content = function(file) {
-      write.csv(getMdist2()[[1]], file, row.names = TRUE)
+      mean_mdist <- getMdist2()[[4]]
+      date_reported <- as.character(Sys.Date())
+      head <- rbind("Date Reported"=date_reported,"Mean M-Distance"=mean_mdist,"")
+      write.table(head, file,sep=",",quote=FALSE,row.names = TRUE,col.names = FALSE)
+      write.table(getMdist2()[[1]],file,append=TRUE,sep=",", row.names = FALSE)
     }
+    # content = function(file) {
+    #   write.csv(getMdist2()[[1]], file, row.names = TRUE)
+    # }
   ) #end data download handler
   
   #data download handler (spectral data)
@@ -492,4 +519,42 @@ server <- function(input, output, session) {
     
   })
   
+  getIdentifiers <- function(file, filename) ({
+    df <- mycsvs(file)
+    df <- as.data.frame(df)
+    
+    if('scan_sample' %in% df[1,2]) {
+      df <- df[-1,]
+    } else {
+      df
+    }
+    
+    df <- df[!(df[,2]=="scan_sample"),]
+    
+    #get sample and file names
+    file_names <- basename(as.vector(df[,1],"character"))
+    sample_names <- basename(as.vector(df[,2],"character"))
+    time_stamp <- df[,3]
+    sensor <- df[,4]
+    
+    
+    
+    #delete non-spectra rows
+    sample_names <- sample_names[seq(2,length(sample_names),2)]
+    file_names <- file_names[seq(1,length(file_names),2)]
+    time_stamp <- time_stamp[seq(2,length(time_stamp),2)]
+    sensor <- sensor[seq(2,length(sensor),2)]
+    #extract lot numbers from file names
+    id <- factor(file_names, label=filename)
+    id <- paste0(gsub(".*_","",gsub(".csv","",id)),"_",sample_names)
+    
+    df <- data.frame(cbind("Sample"=id,"Date Collected"=as.character(gsub( ".*(\\d{4}-\\d{1,2}-\\d{1,2}).*", "\\1", time_stamp))
+                           ,"Sensor"=sensor))
+    df <- df %>% unique()
+    
+    #return df object
+    df 
+  })
+  
+  #output$metadata <- renderPrint({getIdentifiers(input$file1$datapath,input$file1$name)})
 }
